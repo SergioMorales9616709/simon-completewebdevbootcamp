@@ -1,7 +1,4 @@
 const buttonColours = ["red", "blue", "green", "yellow"];
-const gamePattern =[];
-let sonidos = [];
-let userClickedPattern = [];
 ///////////////////////////////////////////////////////////////
 let getRandomNumber = (min, max) => {
     let [minval, maxval] = [parseInt(min), parseInt(max)];
@@ -33,26 +30,88 @@ let cargarSonidos = () => {
     sonidos = [...buttonColours].map((val)=>{
         return new Audio("../sounds/" + val + ".mp3");
     });
-}
+    sonidos.push(new Audio("../sounds/wrong.mp3"))
+};
+let gameOver = () => {
+    sonidos[sonidos.length - 1].play();
+    playing = false;
+    level = 0;
+    showLevel(level);
+    $("body").toggleClass("game-over");
+    setTimeout(() => {
+        $("body").toggleClass("game-over");
+    }, 200);
+};
+let nextMove = () => {
+    let mllisecons = level == 0 ? 300: 1000;
+    level++;
+    clicks=-1;
+    setTimeout(() => {
+        showLevel(level);
+        userClickedPattern = [];
+        randomNumber  = getRandomNumber(0,3);
+        randomChosenColour  = buttonColours[randomNumber];
+        gamePattern.push(randomChosenColour);
+        animateBox(randomNumber);
+    }, mllisecons);
+
+};
+let validaMovimiento = () => {
+    if(playing && gamePattern[clicks] === userClickedPattern[clicks] ){
+        if(gamePattern.length == userClickedPattern.length){
+            nextMove();
+        }
+    }else{
+        gameOver();
+    }
+};
+
 let asignaAccionesBotones = () => {
     $('div[type=button]').on("click", (event)=>{
         userChosenIndex = buttonColours.indexOf(event.target.id);
         userChosenColour = event.target.id;
         userClickedPattern.push(userChosenColour);
         animateBox(userChosenIndex);
-        pulsar(userChosenColour);    
+        pulsar(userChosenColour);
+        clicks++;
+        validaMovimiento();
+    });
+    
+    $(document).keypress(() => {
+        if(!playing){
+            startGame();
+            nextMove();
+        }
     });
 };
+let showLevel = (lvl) => {
+    if(lvl > 0 ){
+        $("#level-title").text("Level "+level);
+    }else{
+        $("#level-title").text("Game Over, Press any Key to Restart");
+    }
+};
+
+let startGame = () => {
+    playing = true;
+    gamePattern = [];
+    userClickedPattern = [];    
+};
+
 let init = () => {
     cargarSonidos();
-    gamePattern.push(randomChosenColour);
-    animateBox(randomNumber);
     asignaAccionesBotones();
 };
 
+let gamePattern =[];
+let sonidos = [];
+let userClickedPattern = [];
+let clicks = 0;
 let randomNumber  = getRandomNumber(0,3);
 let randomChosenColour  = buttonColours[randomNumber];
 let userChosenColour, userChosenIndex;
+let level = 0;
+let playing = false;
 
 $(function(){
     init();
