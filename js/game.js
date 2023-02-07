@@ -13,6 +13,7 @@ $(function(){
     let userChosenColour, userChosenIndex;
     let level = 0;
     let playing = false;
+    let host = "https://sergiomorales9616709.github.io/simon-completewebdevbootcamp/";
     ///////////////////////////////////////////////////////////////
     let getRandomNumber = (min, max) => {
         let [minval, maxval] = [parseInt(min), parseInt(max)];
@@ -42,9 +43,9 @@ $(function(){
     };
     let cargarSonidos = () => {
         sonidos = [...buttonColours].map((val)=>{
-            return new Audio("../sounds/" + val + ".mp3");
+            return new Audio(host+"sounds/" + val + ".mp3");
         });
-        sonidos.push(new Audio("../sounds/wrong.mp3"))
+        sonidos.push(new Audio(host+"sounds/wrong.mp3"))
     };
     let gameOver = () => {
         sonidos[sonidos.length - 1].play();
