@@ -56,6 +56,8 @@ $(function(){
         setTimeout(() => {
             $("body").toggleClass("game-over");
         }, 200);
+
+        $(".btn-start").show(300);
     };
     let nextMove = () => {
         let mllisecons = level == 0 ? 300: 1000;
@@ -98,6 +100,13 @@ $(function(){
                 nextMove();
             }
         });
+
+        $(".btn-start").on("click", () => {
+            if(!playing){
+                startGame();
+                nextMove();
+            }
+        });
     };
     let showLevel = (lvl) => {
         if(lvl > 0 ){
@@ -110,7 +119,8 @@ $(function(){
     let startGame = () => {
         playing = true;
         gamePattern = [];
-        userClickedPattern = [];    
+        userClickedPattern = [];
+        $(".btn-start").hide(300);
     };
     
     let init = () => {
